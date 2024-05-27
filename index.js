@@ -30,25 +30,10 @@ bot.on("message", async (msg) => {
 
   if (text === "/start") {
     console.log("Sending start messages...");
-    await bot.sendMessage(chatId, "Привіт", {
-      reply_markup: {
-        keyboard: [
-          [
-            {
-              text: "Заповни форму",
-              web_app: { url: `${process.env.WEB_APP_URL}/form` },
-            },
-          ],
-        ],
-      },
-    });
-    await bot.sendMessage(chatId, "Зробити замовлення", {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: "Натисни тут", web_app: { url: process.env.WEB_APP_URL } }],
-        ],
-      },
-    });
+    await bot.sendMessage(
+      chatId,
+      "Hello! To place an order click on the button Store"
+    );
   }
 
   if (msg?.web_app_data?.data) {
