@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import "dotenv/config";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 const bot = new telegramAPI(process.env.TOKEN, {
   webHook: {
     port: PORT,
