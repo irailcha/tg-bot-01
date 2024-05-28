@@ -1,17 +1,34 @@
-import TelegramBot from "node-telegram-bot-api";
+import telegramAPI from "node-telegram-bot-api";
 import express from "express";
+import bodyParser from "body-parser";
 import cors from "cors";
 import "dotenv/config";
 
 const PORT = process.env.PORT || 3000;
-const bot = new TelegramBot(process.env.TOKEN, { polling: true });
+const bot = new telegramAPI(process.env.TOKEN, {
+  webHook: {
+    port: PORT,
+  },
+  request: {
+    agentOptions: {
+      keepAlive: true,
+      family: 4,
+    },
+    url: "https://api.telegram.org",
+  },
+});
+
+bot.setWebHook(`${process.env.WEB_APP_URL}/bot${process.env.TOKEN}`);
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-bot.on("polling_error", (error) => {
-  console.error("Polling error:", error);
+app.use(bodyParser.json());
+
+app.post(`/bot${process.env.TOKEN}`, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
 });
 
 // Matches "/echo [whatever]"
@@ -53,7 +70,7 @@ bot.on("message", async (msg) => {
   }
 });
 
-app.post("/", async function (req, res) {
+app.post("/", async (req, res) => {
   const { products, totalPrice, queryid } = req.body;
   try {
     await bot.answerWebAppQuery(queryid, {
