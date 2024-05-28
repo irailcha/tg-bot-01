@@ -47,19 +47,20 @@ bot.on("message", async (msg) => {
       chatId,
       "Hello! To place an order click on the button Store"
     );
-  }
-  await bot.sendMessage(chatId, {
-    reply_markup: {
-      keyboard: [
-        [
-          {
-            text: "Fill out the form for delivery of goods",
-            web_app: { url: `${process.env.WEB_APP_URL}/form` },
-          },
+
+    await bot.sendMessage(chatId, {
+      reply_markup: {
+        keyboard: [
+          [
+            {
+              text: "Fill out the form for delivery of goods",
+              web_app: { url: `${process.env.WEB_APP_URL}/form` },
+            },
+          ],
         ],
-      ],
-    },
-  });
+      },
+    });
+  }
 
   if (msg?.web_app_data?.data) {
     try {
@@ -80,23 +81,25 @@ app.post("/", async (req, res) => {
     await bot.answerWebAppQuery(queryId, {
       type: "article",
       id: queryId,
-      title: "success purchase ",
+      title: "Success purchase",
       input_message_content: {
-        message_text: `You bought a product, your total price is amount ${totalPrice}. Your product list ${products
+        message_text: `You bought a product, your total price is ${totalPrice}. Your product list: ${products
           .map((product) => product.title)
-          .join("")}`,
+          .join(", ")}`,
       },
     });
+
     return res.status(200).json({});
   } catch (error) {
     await bot.answerWebAppQuery(queryId, {
       type: "article",
       id: queryId,
-      title: "unsuccess purchase ",
+      title: "Unsuccessful purchase",
       input_message_content: {
         message_text: `Sorry, could not buy the product`,
       },
     });
+
     return res.status(500).json({});
   }
 });
