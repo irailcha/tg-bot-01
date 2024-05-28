@@ -4,10 +4,9 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import "dotenv/config";
 
-const PORT = process.env.PORT;
 const bot = new telegramAPI(process.env.TOKEN, {
   webHook: {
-    port: PORT,
+    port: 3000,
   },
   request: {
     agentOptions: {
@@ -97,4 +96,4 @@ app.post("/", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+app.listen(3000, () => console.log(`Server started on port 3000`));
