@@ -48,29 +48,29 @@ bot.on("message", async (msg) => {
     );
   }
 
-  // if (msg?.web_app_data?.data) {
-  //   try {
-  //     const data = JSON.parse(msg.web_app_data.data);
-  //     bot.sendMessage(chatId, "Thank you for an answer, " + data?.name);
-  //     bot.sendMessage(chatId, "Your country: " + data?.country);
-  //     bot.sendMessage(chatId, "Your city: " + data?.city);
+  if (msg?.web_app_data?.data) {
+    try {
+      const data = JSON.parse(msg.web_app_data.data);
+      bot.sendMessage(chatId, "Thank you for an answer, " + data?.name);
+      bot.sendMessage(chatId, "Your country: " + data?.country);
+      bot.sendMessage(chatId, "Your city: " + data?.city);
 
-  //     setTimeout(() => {
-  //       bot.sendMessage(chatId, "Your answer will be published in this chat");
-  //     }, 2000);
-  //   } catch (error) {
-  //     console.error("Error parsing web_app_data:", error);
-  //     bot.sendMessage(chatId, "There was an error processing your data.");
-  //   }
-  // }
+      setTimeout(() => {
+        bot.sendMessage(chatId, "Your answer will be published in this chat");
+      }, 2000);
+    } catch (error) {
+      console.error("Error parsing web_app_data:", error);
+      bot.sendMessage(chatId, "There was an error processing your data.");
+    }
+  }
 });
 
 app.post("/", async (req, res) => {
-  const { products, totalPrice, queryid } = req.body;
+  const { products, totalPrice, queryId } = req.body;
   try {
-    await bot.answerWebAppQuery(queryid, {
+    await bot.answerWebAppQuery(queryId, {
       type: "article",
-      id: queryid,
+      id: queryId,
       title: "success purchase ",
       input_message_content: {
         message_text: `You bought a product, your total price is amount ${totalPrice}. Your product list ${products
@@ -80,9 +80,9 @@ app.post("/", async (req, res) => {
     });
     return res.status(200).json({});
   } catch (error) {
-    await bot.answerWebAppQuery(queryid, {
+    await bot.answerWebAppQuery(queryId, {
       type: "article",
-      id: queryid,
+      id: queryId,
       title: "unsuccess purchase ",
       input_message_content: {
         message_text: `Sorry, could not buy the product`,
