@@ -42,11 +42,24 @@ bot.on("message", async (msg) => {
 
   if (text === "/start") {
     console.log("Sending start messages...");
+
     await bot.sendMessage(
       chatId,
       "Hello! To place an order click on the button Store"
     );
   }
+  await bot.sendMessage(chatId, {
+    reply_markup: {
+      keyboard: [
+        [
+          {
+            text: "Fill out the form for delivery of goods",
+            web_app: { url: `${process.env.WEB_APP_URL}/form` },
+          },
+        ],
+      ],
+    },
+  });
 
   if (msg?.web_app_data?.data) {
     try {
@@ -54,10 +67,6 @@ bot.on("message", async (msg) => {
       bot.sendMessage(chatId, "Thank you for an answer, " + data?.name);
       bot.sendMessage(chatId, "Your country: " + data?.country);
       bot.sendMessage(chatId, "Your city: " + data?.city);
-
-      setTimeout(() => {
-        bot.sendMessage(chatId, "Your answer will be published in this chat");
-      }, 2000);
     } catch (error) {
       console.error("Error parsing web_app_data:", error);
       bot.sendMessage(chatId, "There was an error processing your data.");
@@ -73,9 +82,7 @@ app.post("/", async (req, res) => {
       id: queryId,
       title: "success purchase ",
       input_message_content: {
-        message_text: `You bought a product, your total price is amount ${totalPrice}. Your product list ${products
-          .map((item) => item.title)
-          .join("")}`,
+        message_text: `You bought a product, your total price is amount ${totalPrice}. Your product list ${products}`,
       },
     });
     return res.status(200).json({});
