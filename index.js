@@ -5,7 +5,13 @@ import cors from "cors";
 import "dotenv/config";
 
 const bot = new TelegramBot(process.env.TOKEN, { polling: true });
-bot.on("polling_error", (err) => console.log(err.data.error.message));
+bot.on("polling_error", (err) => {
+  if (err.data && err.data.error && err.data.error.message) {
+    console.log(err.data.error.message);
+  } else {
+    console.log("Unknown polling error occurred:", err);
+  }
+});
 
 bot.setWebHook(`${process.env.WEB_APP_URL}/bot${process.env.TOKEN}`);
 
