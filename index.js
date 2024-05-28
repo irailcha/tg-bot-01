@@ -82,7 +82,9 @@ app.post("/", async (req, res) => {
       id: queryId,
       title: "success purchase ",
       input_message_content: {
-        message_text: `You bought a product, your total price is amount ${totalPrice}. Your product list ${products}`,
+        message_text: `You bought a product, your total price is amount ${totalPrice}. Your product list ${products
+          .map((product) => product.title)
+          .join("")}`,
       },
     });
     return res.status(200).json({});
