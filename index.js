@@ -1,21 +1,11 @@
-import telegramAPI from "node-telegram-bot-api";
+import TelegramBot from "node-telegram-bot-api";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import "dotenv/config";
 
-const bot = new telegramAPI(process.env.TOKEN, {
-  webHook: {
-    port: 3000,
-  },
-  request: {
-    agentOptions: {
-      keepAlive: true,
-      family: 4,
-    },
-    url: "https://api.telegram.org",
-  },
-});
+const bot = new TelegramBot(process.env.TOKEN, { polling: true });
+bot.on("polling_error", (err) => console.log(err.data.error.message));
 
 bot.setWebHook(`${process.env.WEB_APP_URL}/bot${process.env.TOKEN}`);
 
@@ -52,21 +42,21 @@ bot.on("message", async (msg) => {
     );
   }
 
-  if (msg?.web_app_data?.data) {
-    try {
-      const data = JSON.parse(msg.web_app_data.data);
-      bot.sendMessage(chatId, "Thank you for an answer, " + data?.name);
-      bot.sendMessage(chatId, "Your country: " + data?.country);
-      bot.sendMessage(chatId, "Your city: " + data?.city);
+  // if (msg?.web_app_data?.data) {
+  //   try {
+  //     const data = JSON.parse(msg.web_app_data.data);
+  //     bot.sendMessage(chatId, "Thank you for an answer, " + data?.name);
+  //     bot.sendMessage(chatId, "Your country: " + data?.country);
+  //     bot.sendMessage(chatId, "Your city: " + data?.city);
 
-      setTimeout(() => {
-        bot.sendMessage(chatId, "Your answer will be published in this chat");
-      }, 2000);
-    } catch (error) {
-      console.error("Error parsing web_app_data:", error);
-      bot.sendMessage(chatId, "There was an error processing your data.");
-    }
-  }
+  //     setTimeout(() => {
+  //       bot.sendMessage(chatId, "Your answer will be published in this chat");
+  //     }, 2000);
+  //   } catch (error) {
+  //     console.error("Error parsing web_app_data:", error);
+  //     bot.sendMessage(chatId, "There was an error processing your data.");
+  //   }
+  // }
 });
 
 app.post("/", async (req, res) => {
@@ -96,4 +86,4 @@ app.post("/", async (req, res) => {
   }
 });
 
-app.listen(3000, () => console.log(`Server started on port 3000`));
+app.listen(3001, () => console.log(`Server started on port 3001`));
