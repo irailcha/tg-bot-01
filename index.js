@@ -84,7 +84,7 @@ app.post("/", async (req, res) => {
       title: "Success purchase",
       input_message_content: {
         message_text: `You bought a product, your total price is ${totalPrice}. Your product list: ${products
-          .map((product) => product.title)
+          .map((product) => product.title + ": " + product.length)
           .join(", ")}`,
       },
     });
