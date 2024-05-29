@@ -76,7 +76,7 @@ bot.on("message", async (msg) => {
 });
 
 app.post("/", async (req, res) => {
-  const { products, totalPrice, queryId } = req.body;
+  const { products, totalPrice, queryId, amount } = req.body;
   try {
     await bot.answerWebAppQuery(queryId, {
       type: "article",
@@ -84,7 +84,7 @@ app.post("/", async (req, res) => {
       title: "Success purchase",
       input_message_content: {
         message_text: `You bought a product, your total price is ${totalPrice}. Your product list: ${products
-          .map((product) => product.title + ": " + product.length)
+          .map((product) => product.title + ": " + product.amount)
           .join(", ")}`,
       },
     });
